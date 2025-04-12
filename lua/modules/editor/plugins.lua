@@ -13,17 +13,15 @@ editor['tpope/vim-commentary'] = {
     config = conf.vim_commentary,
 }
 
--- 显示单文件代码整体架构
-editor['simrat39/symbols-outline.nvim'] = {
-    lazy = true,
-    cmd = {'SymbolsOutline', 'SymbolsOulineOpen'},
-    config = conf.symbols_outline
-}
 -- 根据不同语言解析代码, 提供接口, 比如可以用于显示准确的高亮
 editor['nvim-treesitter/nvim-treesitter'] = {
     lazy = true,
-    run = ':TSUpdate',
-    event = 'BufRead',
+    build = function()
+		if #vim.api.nvim_list_uis() > 0 then
+			vim.api.nvim_command([[TSUpdate]])
+		end
+	end,
+    event = 'BufReadPre',
     dependencies = { 'telescope.nvim' },
     config = conf.nvim_treesitter
 }
@@ -36,6 +34,7 @@ editor['nvim-treesitter/nvim-treesitter-textobjects'] = {
 editor['romgrk/nvim-treesitter-context'] = {
     lazy = true,
     dependencies = { 'nvim-treesitter' },
+    event = 'BufReadPre',
     config = conf.treesitter_context
 }
 -- 基于treesitter的高亮, 括号高亮难看
@@ -44,24 +43,25 @@ editor['p00f/nvim-ts-rainbow'] = {
     dependencies = { 'nvim-treesitter' },
     event = 'BufRead'
 }
--- 高亮查询
+-- 高亮查询以及取消
 editor['romainl/vim-cool'] = {
     lazy = true,
     event = {'CursorMoved', 'InsertEnter'}
 }
 
-editor['rmagatti/auto-session'] = {
-    lazy = true,
-    cmd = {'SaveSession', 'RestoreSession', 'DeleteSession'},
-    config = conf.auto_session
-}
-
 -- Git 命令
 editor["tpope/vim-fugitive"] = { lazy = true, cmd = {"Git", "G"} }
 
-editor["kyazdani42/nvim-tree.lua"] = {
+editor["nvim-tree/nvim-tree.lua"] = {
     lazy = true,
-    cmd = { "NvimTreeToggle" },
+    enabled = false,
+    cmd = {
+		"NvimTreeToggle",
+		"NvimTreeOpen",
+		"NvimTreeFindFile",
+		"NvimTreeFindFileToggle",
+		"NvimTreeRefresh",
+	},
     config = conf.nvim_tree,
 }
 

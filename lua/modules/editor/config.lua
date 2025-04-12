@@ -2,55 +2,6 @@ local config = {}
 local dap_dir = vim.fn.stdpath("data") .. "/dapinstall/"
 local sessions_dir = vim.fn.stdpath("data") .. "/sessions/"
 
-function config.symbols_outline()
-    vim.g.symbols_outline = {
-        highlight_hovered_item = true,
-        show_guides = true,
-        auto_preview = true,
-        position = 'right',
-        show_numbers = false,
-        show_relative_numbers = false,
-        show_symbol_details = true,
-        keymaps = {
-            close = "<Esc>",
-            goto_location = "<Cr>",
-            focus_location = "o",
-            hover_symbol = "<C-space>",
-            rename_symbol = "r",
-            code_actions = "a"
-        },
-        lsp_blacklist = {},
-        symbols = {
-            File = {icon = "", hl = "TSURI"},
-            Module = {icon = "", hl = "TSNamespace"},
-            Namespace = {icon = "", hl = "TSNamespace"},
-            Package = {icon = "", hl = "TSNamespace"},
-            Class = {icon = "𝓒", hl = "TSType"},
-            Method = {icon = "ƒ", hl = "TSMethod"},
-            Property = {icon = "", hl = "TSMethod"},
-            Field = {icon = "", hl = "TSField"},
-            Constructor = {icon = "", hl = "TSConstructor"},
-            Enum = {icon = "ℰ", hl = "TSType"},
-            Interface = {icon = "ﰮ", hl = "TSType"},
-            Function = {icon = "", hl = "TSFunction"},
-            Variable = {icon = "", hl = "TSConstant"},
-            Constant = {icon = "", hl = "TSConstant"},
-            String = {icon = "𝓐", hl = "TSString"},
-            Number = {icon = "#", hl = "TSNumber"},
-            Boolean = {icon = "⊨", hl = "TSBoolean"},
-            Array = {icon = "", hl = "TSConstant"},
-            Object = {icon = "⦿", hl = "TSType"},
-            Key = {icon = "🔐", hl = "TSType"},
-            Null = {icon = "NULL", hl = "TSType"},
-            EnumMember = {icon = "", hl = "TSField"},
-            Struct = {icon = "𝓢", hl = "TSType"},
-            Event = {icon = "🗲", hl = "TSType"},
-            Operator = {icon = "+", hl = "TSOperator"},
-            TypeParameter = {icon = "𝙏", hl = "TSParameter"}
-        }
-    }
-end
-
 function config.vim_cursorwod()
     vim.api.nvim_command('augroup user_plugin_cursorword')
     vim.api.nvim_command('autocmd!')
@@ -73,18 +24,7 @@ function config.nvim_treesitter()
         -- List of parsers to ignore installing (for "all")
         -- ignore_install = { "javascript" },
         highlight = {
-            -- `false` will disable the whole extension
             enable = true,
-            -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-            -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-            -- the name of the parser)
-            -- list of language that will be disabled
-            -- disable = { "c", "rust" },
-
-            -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-            -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-            -- Using this option may slow down your editor, and you may see some duplicate highlights.
-            -- Instead of true it can also be a list of languages
             additional_vim_regex_highlighting = false,
         },
     }
@@ -92,55 +32,6 @@ end
 
 function config.vim_commentary()
     vim.api.nvim_command('autocmd FileType conf commentstring=# %s')
-end
-
-function config.autotag()
-    require('nvim-ts-autotag').setup({
-        filetypes = {
-            "html", "xml", "javascript", "typescriptreact", "javascriptreact",
-            "vue"
-        }
-    })
-end
-
-function config.nvim_colorizer() require('colorizer').setup() end
-
-function config.easymotion()
-    vim.g.EasyMotion_do_mapping = 0
-    vim.g.EasyMotion_smartcase = 1
-    vim.g.EasyMotion_use_smartsign_us = 1
-end
-
-function config.neoscroll()
-    require('neoscroll').setup({
-        -- All these keys will be mapped to their corresponding default scrolling animation
-        mappings = {
-            '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz',
-            'zb'
-        },
-        hide_cursor = true, -- Hide cursor while scrolling
-        stop_eof = true, -- Stop at <EOF> when scrolling downwards
-        use_local_scrolloff = false, -- Use the local scope of scrolloff instead of the global scope
-        respect_scrolloff = false, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
-        cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
-        easing_function = nil, -- Default easing function
-        pre_hook = nil, -- Function to run before the scrolling animation starts
-        post_hook = nil -- Function to run after the scrolling animation ends
-    })
-end
-
-function config.auto_session()
-    local opts = {
-        log_level = 'info',
-        auto_session_enable_last_session = true,
-        auto_session_root_dir = sessions_dir,
-        auto_session_enabled = true,
-        auto_save_enabled = true,
-        auto_restore_enabled = true,
-        auto_session_suppress_dirs = nil
-    }
-
-    require('auto-session').setup(opts)
 end
 
 function config.dapui()
@@ -183,38 +74,7 @@ function config.dapui()
 end
 
 function config.treesitter_context()
-    require'treesitter-context'.setup{
-        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-        throttle = true, -- Throttles plugin updates (may improve performance)
-        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
-        patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
-        -- For all filetypes
-        -- Note that setting an entry here replaces all other patterns for this entry.
-        -- By setting the 'default' entry below, you can control which nodes you want to
-        -- appear in the context window.
-        default = {
-            'class',
-            'function',
-            'method',
-            -- 'for', -- These won't appear in the context
-            -- 'while',
-            -- 'if',
-            -- 'switch',
-            -- 'case',
-        },
-        -- Example for a specific filetype.
-        -- If a pattern is missing, *open a PR* so everyone can benefit.
-        --   rust = {
-        --       'impl_item',
-        --   },
-    },
-    exact_patterns = {
-        -- Example for a specific filetype with Lua patterns
-        -- Treat patterns.rust as a Lua pattern (i.e "^impl_item$" will
-        -- exactly match "impl_item" only)
-        -- rust = true, 
-    }
-}
+    require'treesitter-context'.setup()
 end
 
 function config.dap()
@@ -301,39 +161,13 @@ function config.dap()
     }
 end
 
-function config.dapinstal()
-    require("dap-install").setup({
-        installation_path = dap_dir,
-        verbosely_call_debuggers = false
-    })
-end
-
-function config.nvim_colorizer()
-	require("colorizer").setup()
-end
-
-function config.nvim_comment()
-    require("nvim_comment").setup({
-        -- Linters prefer comment and line to have a space in between markers
-        marker_padding = true,
-        -- should comment out empty or whitespace only lines
-        comment_empty = false,
-        -- trim empty comment whitespace
-        comment_empty_trim_whitespace = true,
-        -- Should key mappings be created
-        create_mappings = true,
-        -- Normal mode mapping left hand side
-        -- line_mapping = "<leader>cs",
-        -- Visual/Operator mapping left hand side
-        operator_mapping = "<leader>cs",
-        -- text object mapping, comment chunk,,
-        -- comment_chunk_text_object = "ic",
-        -- Hook function to call before commenting takes place
-        hook = nil
-    })
-end
-
 function config.nvim_tree()
+    -- disable netrw at the very start of your init.lua
+    -- vim.g.loaded_netrw = 1
+    -- vim.g.loaded_netrwPlugin = 1
+
+    -- -- optionally enable 24-bit colour
+    -- vim.opt.termguicolors = true
     require'nvim-tree'.setup()
 end
 

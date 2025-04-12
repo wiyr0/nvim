@@ -8,7 +8,8 @@ completion['neovim/nvim-lspconfig'] = {
     config = conf.nvim_lsp,
     dependencies = {
         { "williamboman/mason.nvim" },
-        { "williamboman/mason-lspconfig.nvim" }
+        { "williamboman/mason-lspconfig.nvim" },
+        { "SmiteshP/nvim-navic" }
     }
 }
 
@@ -35,21 +36,11 @@ completion['hrsh7th/nvim-cmp'] = {
 		{ "kdheepak/cmp-latex-symbols" },
 	}
 }
--- -- Show function signature when you type
--- completion['ray-x/lsp_signature.nvim'] = {
-    -- lazy = true,
-    -- dependencies = 'nvim-lspconfig',
-    -- config = conf.lsp_signature
--- }
--- completion['tzachar/cmp-tabnine'] = {
-    -- lazy = true,
-    -- dependencies = 'nvim-cmp',
-    -- run = './install.sh'
--- }
--- -- completion['hrsh7th/vim-vsnip-integ'] = {
-    -- -- lazy = true,
-    -- -- dependencies = 'nvim-compe',
-    -- -- requires = {'hrsh7th/vim-vsnip', lazy = true, event = 'InsertCharPre'}
--- -- }
--- completion['rafamadriz/friendly-snippets'] = {lazy = true, dependencies = 'hrsh7th/nvim-compe'}
+-- Show function signature when you type
+completion['ray-x/lsp_signature.nvim'] = {
+    lazy = true,
+    dependencies = 'nvim-lspconfig',
+    event = "InsertEnter",
+    config = conf.lsp_signature
+}
 return completion

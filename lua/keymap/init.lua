@@ -93,3 +93,4 @@ map(0, "n", "go", "<cmd>Lspsaga show_line_diagnostics<cr>", {silent = true, nore
 map(0, "n", "gj", "<cmd>Lspsaga diagnostic_jump_next<cr>", {silent = true, noremap = true})
 map(0, "n", "gk", "<cmd>Lspsaga diagnostic_jump_prev<cr>", {silent = true, noremap = true})
 map(0, "n", "<c-]>", "<cmd>lua vim.lsp.buf.definition()<cr>", {silent = true, noremap = true})
+map(0, "n", "<leader>n", "<cmd>NvimTreeToggle<cr>", {silent = true, noremap = true})

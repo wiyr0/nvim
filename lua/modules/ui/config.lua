@@ -63,15 +63,8 @@ function config.nvim_bufferline()
 	})
 end
 
-function config.nvim_gps()
-    require("nvim-gps").setup()
-end
-
 function config.lualine()
-    -- require('modules.ui.evil_lualine')
-    require('lualine').setup({
-        options = {theme = 'tokyonight' }
-    })
+    require('modules.ui.evil_lualine')
 end
 
 return config

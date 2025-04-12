@@ -35,8 +35,9 @@ ui['lukas-reineke/indent-blankline.nvim'] = {
 -- 底下状态栏显示
 ui['nvim-lualine/lualine.nvim'] = {
     lazy = true,
+    event = { "BufReadPost", "BufAdd", "BufNewFile" },
     config = conf.lualine,
-    dependencies = "lualine-lsp-progress",
+    dependencies = {'nvim-tree/nvim-web-devicons'}
 }
 -- vim支持专注模式
 ui['folke/zen-mode.nvim'] = {
@@ -56,17 +57,7 @@ ui["folke/tokyonight.nvim"] = {
 -- bufferline
 ui["akinsho/bufferline.nvim"] = {
     lazy = true,
-    tag = "*",
-    event = "BufRead",
+    event = { "BufReadPre", "BufAdd", "BufNewFile" },
     config = conf.nvim_bufferline,
-  requires = 'kyazdani42/nvim-web-devicons',
 }
---  显示鼠标当前是那个类/functional内
-ui["SmiteshP/nvim-gps"] = {
-    lazy = true,
-    dependencies = "nvim-treesitter",
-    config = conf.nvim_gps,
-}
-
-ui["arkav/lualine-lsp-progress"] = { lazy = true, dependencies = "nvim-gps" }
 return ui

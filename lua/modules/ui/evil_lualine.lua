@@ -2,7 +2,6 @@
 -- Author: shadmansaleh
 -- Credit: glepnir
 local lualine = require('lualine')
-local gps = require("nvim-gps")
 
 -- Color table for highlights
 -- stylua: ignore
@@ -74,7 +73,7 @@ local function ins_left(component)
   table.insert(config.sections.lualine_c, component)
 end
 
--- Inserts a component in lualine_x ot right section
+-- Inserts a component in lualine_x at right section
 local function ins_right(component)
   table.insert(config.sections.lualine_x, component)
 end
@@ -142,22 +141,12 @@ ins_left {
   sources = { 'nvim_diagnostic' },
   symbols = { error = ' ', warn = ' ', info = ' ' },
   diagnostics_color = {
-    color_error = { fg = colors.red },
-    color_warn = { fg = colors.yellow },
-    color_info = { fg = colors.cyan },
+    error = { fg = colors.red },
+    warn = { fg = colors.yellow },
+    info = { fg = colors.cyan },
   },
 }
 
-ins_left {
-    function ()
-        if gps.is_available() then
-            return gps.get_location()
-        else
-            return ""
-        end
-    end,
-    cond = gps.is_available,
-}
 -- Insert mid section. You can make any number of sections in neovim :)
 -- for lualine it's any number greater then 2
 ins_left {
@@ -167,15 +156,11 @@ ins_left {
 }
 
 ins_left {
-    'lsp_progress'
-}
-
-ins_left {
   -- Lsp server name .
   function()
     local msg = 'No Active Lsp'
-    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-    local clients = vim.lsp.get_active_clients()
+    local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
+    local clients = vim.lsp.get_clients()
     if next(clients) == nil then
       return msg
     end
@@ -215,7 +200,7 @@ ins_right {
 ins_right {
   'diff',
   -- Is it me or the symbol for modified us really weird
-  symbols = { added = ' ', modified = '柳 ', removed = ' ' },
+  symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
   diff_color = {
     added = { fg = colors.green },
     modified = { fg = colors.orange },
