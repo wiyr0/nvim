@@ -1,73 +1,7 @@
 local config = {}
 
 function config.telescope()
-    local home = os.getenv("HOME")
-    vim.cmd [[packadd plenary.nvim]]
-    vim.cmd [[packadd popup.nvim]]
-    vim.cmd [[packadd telescope-fzf-native.nvim]]
-    vim.cmd [[packadd telescope-project.nvim]]
-    vim.cmd [[packadd sql.nvim]]
-    vim.cmd [[packadd telescope-frecency.nvim]]
-    local actions = require('telescope.actions')
-
-    require('telescope').setup {
-        defaults = {
-            prompt_prefix = '🔭 ',
-            selection_caret = " ",
-            -- layout_config = {
-                -- horizontal = {prompt_position = "bottom", results_width = 0.6},
-                -- vertical = {mirror = false}
-            -- },
-            -- file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-            -- grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-            -- qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-            -- file_sorter = require("telescope.sorters").get_fuzzy_file,
-            -- file_ignore_patterns = {},
-            -- generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-            -- path_display = {"absolute"},
-            -- winblend = 0,
-            -- border = {},
-            -- borderchars = {
-                -- "─", "│", "─", "│", "╭", "╮", "╯", "╰"
-            -- },
-            -- color_devicons = true,
-            -- use_less = true,
-            set_env = {["COLORTERM"] = "truecolor"},
-            mappings = {
-                i = {
-                    ["<C-j>"] = actions.move_selection_next,
-                    ["<C-k>"] = actions.move_selection_previous,
-                }
-            }
-        },
-        extensions = {
-            fzf = {
-                fuzzy = true,                    -- false will only do exact matching
-                override_generic_sorter = true,  -- override the generic sorter
-                override_file_sorter = true,     -- override the file sorter
-                case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
-                -- the default case_mode is "smart_case"
-            },
-            frecency = {
-                show_scores = true,
-                show_unindexed = true,
-                ignore_patterns = {"*.git/*", "*/tmp/*"},
-                workspaces = {
-                    ["conf"] = home .. "/.config",
-                    ["data"] = home .. "/.local/share",
-                    ["nvim"] = home .. "/.config/nvim",
-                    ["code"] = home .. "/code",
-                    ["c"] = home .. "/code/c",
-                    ["cpp"] = home .. "/code/cpp",
-                    ["go"] = home .. "/go/src",
-                    ["rust"] = home .. "/code/rs"
-                }
-            }
-        }
-    }
-    require('telescope').load_extension('fzf')
-    require('telescope').load_extension('project')
-    require('telescope').load_extension('frecency')
+    require('telescope.builtin')
 end
 
 function config.trouble()
@@ -146,15 +80,22 @@ function config.sniprun()
 end
 
 function config.wilder()
-    vim.cmd [[
-call wilder#enable_cmdline_enter()
-set wildcharm=<Tab>
-cmap <expr> <Tab> wilder#in_context() ? wilder#next() : "\<Tab>"
-cmap <expr> <S-Tab> wilder#in_context() ? wilder#previous() : "\<S-Tab>"
+	local wilder = require("wilder")
 
-" only / and ? are enabled by default
-call wilder#set_option('modes', ['/', '?', ':'])
-    ]]
+	wilder.set_option("use_python_remote_plugin", 0)
+    wilder.setup({modes = {':', '/', '?'}})
+	wilder.set_option("pipeline", {
+		wilder.branch(
+			wilder.cmdline_pipeline({ use_python = 0, fuzzy = 1, fuzzy_filter = wilder.lua_fzy_filter() }),
+			wilder.vim_search_pipeline(),
+			{
+				wilder.check(function(_, x)
+					return x == ""
+				end),
+				wilder.history(),
+			}
+		),
+	})
 end
 
 return config

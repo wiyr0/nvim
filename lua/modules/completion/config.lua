@@ -1,6 +1,67 @@
 local config = {}
 
-function config.nvim_lsp() require('modules.completion.lspconfig') end
+local function get_binary_path_list(binaries)
+	local path_list = {}
+	for _, binary in ipairs(binaries) do
+		local path = vim.fn.exepath(binary)
+		if path ~= "" then
+			table.insert(path_list, path)
+		end
+	end
+	return table.concat(path_list, ",")
+end
+
+function config.nvim_lsp()
+    local nvim_lsp = require("lspconfig")
+    require("mason").setup({
+        ui = {
+            icons = {
+                package_installed = "✓",
+                package_pending = "➜",
+                package_uninstalled = "✗"
+            }
+        }
+    })
+    require("mason-lspconfig").setup({
+        -- 确保安装，根据需要填写
+        ensure_installed = {
+            "lua_ls",
+            "clangd",
+            "pyright"
+        },
+    })
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    require("mason-lspconfig").setup_handlers {
+        function (server_name) -- default handler (optional)
+            require("lspconfig")[server_name].setup {
+    			capabilities = capabilities
+			}
+        end,
+		['clangd'] = function()
+            require("lspconfig").clangd.setup {
+              cmd = {
+				  "clangd",
+				  "-j=12",
+				  "--enable-config",
+				  "--background-index",
+				  "--pch-storage=memory",
+				  -- You MUST set this arg ↓ to your c/cpp compiler location (if not included)!
+				  "--query-driver=" .. get_binary_path_list({ "clang++", "clang", "gcc", "g++" }),
+				  "--clang-tidy",
+				  "--all-scopes-completion",
+				  "--completion-style=detailed",
+				  "--header-insertion-decorators",
+				  "--header-insertion=iwyu",
+				  "--limit-references=3000",
+				  "--limit-results=350",
+              },
+			  capabilities = capabilities
+			}
+		end
+
+    }
+	pcall(vim.cmd.LspStart)
+end
 
 function gen_lspkind_icons()
     return {
@@ -58,26 +119,26 @@ function config.cmp()
                 end
             end, { "i", "s" }),
         }),
-        formatting = {
-			format = function(entry, vim_item)
-				local lspkind_icons = gen_lspkind_icons()
-				-- load lspkind icons
-				vim_item.kind = string.format("%s %s", lspkind_icons[vim_item.kind], vim_item.kind)
-				vim_item.menu = ({
-					buffer = "[BUF]",
-					nvim_lsp = "[LSP]",
-					path = "[PATH]",
-                    cmp_tabnine = "[TN]",
-				})[entry.source.name]
+        -- formatting = {
+			-- format = function(entry, vim_item)
+				-- local lspkind_icons = gen_lspkind_icons()
+				-- -- load lspkind icons
+				-- vim_item.kind = string.format("%s %s", lspkind_icons[vim_item.kind], vim_item.kind)
+				-- vim_item.menu = ({
+					-- buffer = "[BUF]",
+					-- nvim_lsp = "[LSP]",
+					-- path = "[PATH]",
+                    -- cmp_tabnine = "[TN]",
+				-- })[entry.source.name]
 
-				return vim_item
-			end,
-		},
+				-- return vim_item
+			-- end,
+		-- },
         sources = cmp.config.sources({
             { name = 'nvim_lsp' },
             { name = 'buffer' },
             { name = 'path' },
-            { name = 'cmp_tabnine' },
+            -- { name = 'cmp_tabnine' },
         })
     })
 	-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -96,6 +157,10 @@ function config.cmp()
 			{ name = 'cmdline' }
 		})
 	})
+end
+
+function config.saga()
+	require('lspsaga').setup({})
 end
 
 function config.lsp_signature()

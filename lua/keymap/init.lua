@@ -16,41 +16,6 @@ local plug_map = {
     -- ["s|<Tab>"] = map_cmd("v:lua.tab_complete()"):with_expr():with_silent(),
     -- ["i|<S-Tab>"] = map_cmd("v:lua.s_tab_complete()"):with_expr():with_silent(),
     -- ["s|<S-Tab>"] = map_cmd("v:lua.s_tab_complete()"):with_expr():with_silent(),
-    -- Packer
-    ["n|<leader>ps"] = map_cr("PackerSync"):with_silent():with_noremap()
-        :with_nowait(),
-    ["n|<leader>pu"] = map_cr("PackerUpdate"):with_silent():with_noremap()
-        :with_nowait(),
-    ["n|<leader>pi"] = map_cr("PackerInstall"):with_silent():with_noremap()
-        :with_nowait(),
-    ["n|<leader>pc"] = map_cr("PackerCompile"):with_silent():with_noremap()
-        :with_nowait(),
-    -- Lsp mapp work when insertenter and lsp start
-    ["n|<leader>li"] = map_cr("LspInfo"):with_noremap():with_silent()
-        :with_nowait(),
-    ["n|<leader>lr"] = map_cr("LspRestart"):with_noremap():with_silent()
-        :with_nowait(),
-    ["n|g["] = map_cr('Lspsaga diagnostic_jump_next'):with_noremap()
-        :with_silent(),
-    ["n|g]"] = map_cr('Lspsaga diagnostic_jump_prev'):with_noremap()
-        :with_silent(),
-    ["n|K"] = map_cr("Lspsaga hover_doc"):with_noremap():with_silent(),
-    ["n|ca"] = map_cr("Lspsaga code_action"):with_noremap()
-        :with_silent(),
-    ["v|ca"] = map_cu("Lspsaga range_code_action"):with_noremap()
-        :with_silent(),
-    ["n|<c-]>"] = map_cmd('<cmd>lua vim.lsp.buf.definition()<CR>'):with_noremap()
-        :with_silent(),
-    ["n|gD"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap()
-        :with_silent(),
-    ["n|gs"] = map_cr('Lspsaga signature_help'):with_noremap():with_silent(),
-    ["n|gr"] = map_cr('Lspsaga rename'):with_noremap():with_silent(),
-    ["n|gf"] = map_cr('Lspsaga lsp_finder'):with_noremap():with_silent(),
-    ["n|go"] = map_cu('Lspsaga open_floaterm'):with_noremap():with_silent(),
-    ["t|gc"] = map_cu([[<C-\><C-n>:Lspsaga close_floaterm<CR>]]):with_noremap()
-        :with_silent(),
-    -- ["n|<Leader>g"] = map_cu("Lspsaga open_floaterm gitui"):with_noremap()
-        -- :with_silent(),
     -- Plugin Telescope
     ["n|<Leader>fp"] = map_cu('Telescope project'):with_noremap():with_silent(),
     ["n|<Leader>o"] = map_cu('Telescope oldfiles'):with_noremap()
@@ -61,12 +26,6 @@ local plug_map = {
         :with_silent(),
     ["n|<Leader>a"] = map_cu('Telescope live_grep'):with_noremap():with_silent(),
     ["n|<Leader>fn"] = map_cu('DashboardNewFile'):with_noremap():with_silent(),
-    -- Plugin accelerate-jk
-    -- ["n|j"] = map_cmd("v:lua.enhance_jk_move('j')"):with_silent():with_expr(),
-    -- ["n|k"] = map_cmd("v:lua.enhance_jk_move('k')"):with_silent():with_expr(),
-    -- Plugin EasyAlign
-    -- ["n|ga"] = map_cmd("v:lua.enhance_align('nga')"):with_expr(),
-    -- ["x|ga"] = map_cmd("v:lua.enhance_align('xga')"):with_expr(),
     -- Plugin ZenMode
     ["n|<leader>z"] = map_cr('ZenMode'):with_noremap():with_silent(),
     -- Plugin SymbolOutline
@@ -125,3 +84,12 @@ local plug_map = {
 };
 
 bind.nvim_load_mapping(plug_map)
+local map = vim.api.nvim_buf_set_keymap
+map(0, "n", "gr", "<cmd>Lspsaga rename<cr>", {silent = true, noremap = true})
+map(0, "n", "gx", "<cmd>Lspsaga code_action<cr>", {silent = true, noremap = true})
+map(0, "x", "gx", ":<c-u>Lspsaga range_code_action<cr>", {silent = true, noremap = true})
+map(0, "n", "K",  "<cmd>Lspsaga hover_doc<cr>", {silent = true, noremap = true})
+map(0, "n", "go", "<cmd>Lspsaga show_line_diagnostics<cr>", {silent = true, noremap = true})
+map(0, "n", "gj", "<cmd>Lspsaga diagnostic_jump_next<cr>", {silent = true, noremap = true})
+map(0, "n", "gk", "<cmd>Lspsaga diagnostic_jump_prev<cr>", {silent = true, noremap = true})
+map(0, "n", "<c-]>", "<cmd>lua vim.lsp.buf.definition()<cr>", {silent = true, noremap = true})
