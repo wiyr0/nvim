@@ -46,6 +46,10 @@ ui['folke/zen-mode.nvim'] = {
     config = conf.zen_mode
 }
 -- color theme
+ui["Mofiqul/vscode.nvim"] = {
+    lazy = false,
+    config = conf.vscode,
+}
 ui["savq/melange-nvim"] = {
     lazy = false,
 }

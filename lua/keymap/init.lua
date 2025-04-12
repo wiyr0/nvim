@@ -94,3 +94,8 @@ map(0, "n", "gj", "<cmd>Lspsaga diagnostic_jump_next<cr>", {silent = true, norem
 map(0, "n", "gk", "<cmd>Lspsaga diagnostic_jump_prev<cr>", {silent = true, noremap = true})
 map(0, "n", "<c-]>", "<cmd>lua vim.lsp.buf.definition()<cr>", {silent = true, noremap = true})
 map(0, "n", "<leader>n", "<cmd>NvimTreeToggle<cr>", {silent = true, noremap = true})
+map(0,  "n", "<F5>", "<cmd>lua require'dap'.continue()<CR>", {silent = true, noremap = true})
+map(0, "n", "<F6>", "<cmd>lua require'dap'.step_over()<CR>", {silent = true, noremap = true})
+map(0, "n", "<F7>", "<cmd>lua require'dap'.step_into()<CR>", {silent = true, noremap = true})
+map(0, "n", "<F8>", "<cmd>lua require'dap'.step_out()<CR>", {silent = true, noremap = true})
+map(0, "n", "<F9>", "<cmd>lua require'dap'.toggle_breakpoint()<CR>", {silent = true, noremap = true})

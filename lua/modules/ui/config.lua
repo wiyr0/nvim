@@ -67,4 +67,16 @@ function config.lualine()
     require('modules.ui.evil_lualine')
 end
 
+function config.vscode()
+    require("vscode").setup({
+        transparent = true,
+        italic_comments = true,
+        -- 禁止使用 nvim-tree 背景色 
+        disable_nvimtree_bg = true,
+        -- 重写部分元素配色 
+        color_overrides = {
+            vscLineNumber = '#FFFFFF',
+        },
+    })
+end
 return config

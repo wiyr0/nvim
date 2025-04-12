@@ -30,6 +30,7 @@ local load_core = function()
 
     -- vim.cmd [[colorscheme tokyonight-night]]
     vim.cmd [[colorscheme melange]]
+    -- vim.cmd [[colorscheme vscode]]
 end
 
 load_core()

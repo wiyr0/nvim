@@ -98,4 +98,197 @@ function config.wilder()
 	})
 end
 
+function better_breakpoint_ui()
+    local dap_breakpoint_color = {
+        breakpoint = {
+            ctermbg=0,
+            fg='#993939',
+            bg='#31353f',
+        },
+        logpoing = {
+            ctermbg=0,
+            fg='#61afef',
+            bg='#31353f',
+        },
+        stopped = {
+            ctermbg=0,
+            fg='#98c379',
+            bg='#31353f'
+        },
+    }
+
+    vim.api.nvim_set_hl(0, 'DapBreakpoint', dap_breakpoint_color.breakpoint)
+    vim.api.nvim_set_hl(0, 'DapLogPoint', dap_breakpoint_color.logpoing)
+    vim.api.nvim_set_hl(0, 'DapStopped', dap_breakpoint_color.stopped)
+
+    local dap_breakpoint = {
+        error = {
+            text = "",
+            texthl = "DapBreakpoint",
+            linehl = "DapBreakpoint",
+            numhl = "DapBreakpoint",
+        },
+        condition = {
+            text = 'ﳁ',
+            texthl = 'DapBreakpoint',
+            linehl = 'DapBreakpoint',
+            numhl = 'DapBreakpoint',
+        },
+        rejected = {
+            text = "",
+            texthl = "DapBreakpint",
+            linehl = "DapBreakpoint",
+            numhl = "DapBreakpoint",
+        },
+        logpoint = {
+            text = '',
+            texthl = 'DapLogPoint',
+            linehl = 'DapLogPoint',
+            numhl = 'DapLogPoint',
+        },
+        stopped = {
+            text = '',
+            texthl = 'DapStopped',
+            linehl = 'DapStopped',
+            numhl = 'DapStopped',
+        },
+    }
+
+    vim.fn.sign_define('DapBreakpoint', dap_breakpoint.error)
+    vim.fn.sign_define('DapBreakpointCondition', dap_breakpoint.condition)
+    vim.fn.sign_define('DapBreakpointRejected', dap_breakpoint.rejected)
+    vim.fn.sign_define('DapLogPoint', dap_breakpoint.logpoint)
+    vim.fn.sign_define('DapStopped', dap_breakpoint.stopped)
+end
+
+function config.dap()
+    local dap = require("dap")
+
+    dap.adapters.go = function(callback, config)
+        local stdout = vim.loop.new_pipe(false)
+        local handle
+        local pid_or_err
+        local port = 38697
+        local opts = {
+            stdio = {nil, stdout},
+            args = {"dap", "-l", "127.0.0.1:" .. port},
+            detached = true
+        }
+        handle, pid_or_err = vim.loop.spawn("dlv", opts, function(code)
+            stdout:close()
+            handle:close()
+            if code ~= 0 then print('dlv exited with code', code) end
+        end)
+        assert(handle, 'Error running dlv: ' .. tostring(pid_or_err))
+        stdout:read_start(function(err, chunk)
+            assert(not err, err)
+            if chunk then
+                vim.schedule(function()
+                    require('dap.repl').append(chunk)
+                end)
+            end
+        end)
+        -- Wait for delve to start
+        vim.defer_fn(function()
+            callback({type = "server", host = "127.0.0.1", port = port})
+        end, 100)
+    end
+    -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+    dap.configurations.go = {
+        {type = "go", name = "Debug", request = "launch", program = "${file}"},
+        {
+            type = "go",
+            name = "Debug test", -- configuration for debugging test files
+            request = "launch",
+            mode = "test",
+            program = "${file}"
+        }, -- works with go.mod packages and sub packages 
+        {
+            type = "go",
+            name = "Debug test (go.mod)",
+            request = "launch",
+            mode = "test",
+            program = "./${relativeFileDirname}"
+        }
+    }
+
+    dap.adapters.python = {
+        type = 'executable',
+        command = '/Users/wiyr/.pyenv/shims/python',
+        args = {'-m', 'debugpy.adapter'}
+    }
+    dap.configurations.python = {
+        {
+            -- The first three options are required by nvim-dap
+            type = 'python', -- the type here established the link to the adapter definition: `dap.adapters.python`
+            request = 'launch',
+            name = "Launch file",
+
+            -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+            program = "${file}", -- This configuration will launch the current file if used.
+            pythonPath = function()
+                return '/Users/wiyr/.pyenv/shims/python'
+            end
+        }
+    }
+    better_breakpoint_ui()
+end
+
+function config.dapui()
+    local dapui = require("dapui")
+    dapui.setup({
+        icons = {expanded = "▾", collapsed = "▸"},
+        mappings = {
+            -- Use a table to apply multiple mappings
+            expand = {"<CR>", "<2-LeftMouse>"},
+            open = "o",
+            remove = "d",
+            edit = "e",
+            repl = "r"
+        },
+        sidebar = {
+            open_on_start = true,
+            elements = {
+                -- Provide as ID strings or tables with "id" and "size" keys
+                {
+                    id = "scopes",
+                    size = 0.25 -- Can be float or integer > 1
+                }, {id = "breakpoints", size = 0.25},
+                {id = "stacks", size = 0.25}, {id = "watches", size = 00.25}
+            },
+            width = 40,
+            position = "left"
+        },
+        tray = {
+            open_on_start = true,
+            elements = {"repl"},
+            height = 10,
+            position = "bottom"
+        },
+        floating = {
+            max_height = nil,
+            max_width = nil,
+            mappings = {close = {"q", "<Esc>"}}
+        },
+        windows = {indent = 1}
+    })
+    local dap = require("dap")
+    dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open({})
+    end
+
+    dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close({})
+        dap.repl.close()
+    end
+
+
+    dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close({})
+        dap.repl.close()
+    end
+end
+
+
 return config

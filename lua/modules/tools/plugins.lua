@@ -44,12 +44,36 @@ tools['nvim-telescope/telescope-frecency.nvim'] = {
     -- cmd = {"Trouble", "TroubleToggle", "TroubleRefresh"},
     -- config = conf.trouble
 -- }
-tools['dstein64/vim-startuptime'] = {lazy = true, cmd = "StartupTime"}
+tools['dstein64/vim-startuptime'] = {lazy = false, cmd = "StartupTime"}
 tools['gelguy/wilder.nvim'] = {
     lazy = true,
     event = "CmdlineEnter",
     config = conf.wilder,
     dependencies = { "romgrk/fzy-lua-native" }
 }
-tools["dstein64/vim-startuptime"] = { lazy = true, cmd = "StartupTime" }
+tools["mfussenegger/nvim-dap"] = {
+	lazy = true,
+	cmd = {
+		"DapSetLogLevel",
+		"DapShowLog",
+		"DapContinue",
+		"DapToggleBreakpoint",
+		"DapToggleRepl",
+		"DapStepOver",
+		"DapStepInto",
+		"DapStepOut",
+		"DapTerminate",
+	},
+	config = conf.dap,
+	dependencies = {
+		{
+			"rcarriga/nvim-dap-ui",
+			config = conf.dapui,
+			dependencies = {
+				"nvim-neotest/nvim-nio",
+			},
+		},
+		{ "jay-babu/mason-nvim-dap.nvim" },
+	},
+}
 return tools
