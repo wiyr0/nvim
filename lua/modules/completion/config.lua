@@ -167,7 +167,12 @@ function config.cmp()
 end
 
 function config.saga()
-	require('lspsaga').setup({})
+	require('lspsaga').setup({
+		ui = {
+			code_action = "" --会窗口抖动
+        }
+
+    })
 end
 
 function config.lsp_signature()
