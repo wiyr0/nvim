@@ -19,7 +19,8 @@ ui['lewis6991/gitsigns.nvim'] = {
     config = conf.gitsigns,
     requires = {'nvim-lua/plenary.nvim', lazy = true}
 }
--- ui['Th3Whit3Wolf/one-nvim'] = {}
+ui['Th3Whit3Wolf/one-nvim'] = {}
+ui['sainnhe/everforest'] = {}
 -- 代码缩进对齐线
 ui['lukas-reineke/indent-blankline.nvim'] = {
     lazy = true,

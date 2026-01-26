@@ -25,7 +25,48 @@ function utils.get_env()
 end
 
 function config.telescope()
+    local home = os.getenv("HOME")
     require('telescope.builtin')
+    local actions = require('telescope.actions')
+    require('telescope').setup {
+        defaults = {
+            prompt_prefix = '🔭 ',
+            selection_caret = " ",
+            mappings = {
+                i = {
+                    ["<C-j>"] = actions.move_selection_next,
+                    ["<C-k>"] = actions.move_selection_previous,
+                }
+            }
+        },
+        extensions = {
+            fzf = {
+                fuzzy = true,                    -- false will only do exact matching
+                override_generic_sorter = true,  -- override the generic sorter
+                override_file_sorter = true,     -- override the file sorter
+                case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                -- the default case_mode is "smart_case"
+            },
+            frecency = {
+                show_scores = true,
+                show_unindexed = true,
+                ignore_patterns = {"*.git/*", "*/tmp/*"},
+                workspaces = {
+                    ["conf"] = home .. "/.config",
+                    ["data"] = home .. "/.local/share",
+                    ["nvim"] = home .. "/.config/nvim",
+                    ["code"] = home .. "/code",
+                    ["c"] = home .. "/code/c",
+                    ["cpp"] = home .. "/code/cpp",
+                    ["go"] = home .. "/go/src",
+                    ["rust"] = home .. "/code/rs"
+                }
+            }
+        }
+    }
+    -- require('telescope').load_extension('fzf')
+    -- require('telescope').load_extension('project')
+    -- require('telescope').load_extension('frecency')
 end
 
 function config.trouble()

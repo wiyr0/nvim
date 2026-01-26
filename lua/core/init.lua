@@ -29,7 +29,9 @@ local load_core = function()
     require('keymap')
 
     -- vim.cmd [[colorscheme tokyonight-night]]
-    vim.cmd [[colorscheme melange]]
+    -- vim.cmd [[colorscheme melange]]
+    vim.cmd [[colorscheme one-nvim]]
+    -- vim.cmd [[colorscheme everforest]]
     -- vim.cmd [[colorscheme vscode]]
 end
 
