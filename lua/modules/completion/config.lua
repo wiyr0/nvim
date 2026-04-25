@@ -45,6 +45,10 @@ function config.nvim_lsp()
             require("lspconfig").clangd.setup {
                 on_attach = function(client, bufnr)
                     navic.attach(client, bufnr)
+                    -- 添加格式化修改的命令
+                    -- vim.keymap.set("n", "fm", function()
+                    --     require("lsp-format-modifications").format_modifications(client, bufnr)
+                    -- end, { buffer = bufnr, desc = "Format modified lines only" })
                 end,
                 cmd = {
                     "clangd",

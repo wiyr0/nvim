@@ -13,6 +13,13 @@ completion['neovim/nvim-lspconfig'] = {
     }
 }
 
+-- completion['joechrisellis/lsp-format-modifications.nvim'] = {
+-- 	lazy = true,
+-- 	event = "LspAttach",
+--     dependencies = { "nvim-lua/plenary.nvim" },
+--     config = function() require("lsp-format-modifications").setup() end
+-- }
+
 -- 炫酷的代码重构，悬浮窗显示
 completion['nvimdev/lspsaga.nvim'] = {
 	lazy = true,

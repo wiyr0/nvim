@@ -76,4 +76,10 @@ editor['vim-scripts/a.vim'] = {
 editor['mg979/vim-visual-multi'] = {
     lazy = false
 }
+
+editor['stevearc/conform.nvim'] = {
+    event = { "BufReadPre", "BufNewFile" },
+    config = conf.conform,
+    lazy = false
+}
 return editor

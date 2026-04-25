@@ -81,6 +81,9 @@ local plug_map = {
 	["n|<leader>n"] = map_cr("NvimTreeToggle"):with_noremap():with_silent(),
 	["n|<leader>f"] = map_cr("NvimTreeFindFile"):with_noremap():with_silent(),
 	["n|<leader>r"] = map_cr("NvimTreeRefresh"):with_noremap():with_silent(),
+	["n|co"] = map_cr("Lspsaga show_line_diagnostics"):with_noremap():with_silent(),
+	["n|cj"] = map_cr("Lspsaga diagnostic_jump_next"):with_noremap():with_silent(),
+	["n|ck"] = map_cr("Lspsaga diagnostic_jump_prev"):with_noremap():with_silent(),
 };
 
 bind.nvim_load_mapping(plug_map)
@@ -89,9 +92,6 @@ map(0, "n", "gr", "<cmd>Lspsaga rename<cr>", {silent = true, noremap = true})
 map(0, "n", "gx", "<cmd>Lspsaga code_action<cr>", {silent = true, noremap = true})
 map(0, "x", "gx", ":<c-u>Lspsaga range_code_action<cr>", {silent = true, noremap = true})
 map(0, "n", "K",  "<cmd>Lspsaga hover_doc<cr>", {silent = true, noremap = true})
-map(0, "n", "co", "<cmd>Lspsaga show_line_diagnostics<cr>", {silent = true, noremap = true})
-map(0, "n", "cj", "<cmd>Lspsaga diagnostic_jump_next<cr>", {silent = true, noremap = true})
-map(0, "n", "ck", "<cmd>Lspsaga diagnostic_jump_prev<cr>", {silent = true, noremap = true})
 map(0, "n", "<c-]>", "<cmd>lua vim.lsp.buf.definition()<cr>", {silent = true, noremap = true})
 map(0, "n", "<leader>n", "<cmd>NvimTreeToggle<cr>", {silent = true, noremap = true})
 map(0, "n", "<F5>", "<cmd>lua require'dap'.continue()<CR>", {silent = true, noremap = true})
