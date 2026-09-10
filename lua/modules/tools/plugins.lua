@@ -76,4 +76,11 @@ tools["mfussenegger/nvim-dap"] = {
 		{ "jay-babu/mason-nvim-dap.nvim" },
 	},
 }
+tools["chrisbra/csv.vim"] = {
+    lazy = true,
+    ft = { "csv", "tsv" },
+    config = function()
+        vim.g.csv_autocmd_arrange = 1
+    end,
+}
 return tools
