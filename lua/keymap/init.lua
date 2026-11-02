@@ -92,7 +92,15 @@ map(0, "n", "gr", "<cmd>Lspsaga rename<cr>", {silent = true, noremap = true})
 map(0, "n", "gx", "<cmd>Lspsaga code_action<cr>", {silent = true, noremap = true})
 map(0, "x", "gx", ":<c-u>Lspsaga range_code_action<cr>", {silent = true, noremap = true})
 map(0, "n", "K",  "<cmd>Lspsaga hover_doc<cr>", {silent = true, noremap = true})
-map(0, "n", "<c-]>", "<cmd>lua vim.lsp.buf.definition()<cr>", {silent = true, noremap = true})
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("LspDefinitionKeymaps", { clear = true }),
+    callback = function(event)
+        for _, key in ipairs({ "<C-]>", "gd" }) do
+            vim.keymap.set("n", key, vim.lsp.buf.definition,
+                { buffer = event.buf, silent = true, desc = "Go to definition" })
+        end
+    end,
+})
 map(0, "n", "<leader>n", "<cmd>NvimTreeToggle<cr>", {silent = true, noremap = true})
 map(0, "n", "<F5>", "<cmd>lua require'dap'.continue()<CR>", {silent = true, noremap = true})
 map(0, "n", "<F6>", "<cmd>lua require'dap'.step_over()<CR>", {silent = true, noremap = true})

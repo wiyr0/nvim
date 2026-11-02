@@ -4,7 +4,7 @@ local conf = require('modules.completion.config')
 -- A collection of common configurations for Neovim's built-in language server client.
 completion['neovim/nvim-lspconfig'] = {
     lazy = true,
-    event = { 'CursorHold', 'CursorHoldI' },
+    event = { 'BufReadPre', 'BufNewFile' },
     config = conf.nvim_lsp,
     dependencies = {
         { "williamboman/mason.nvim" },
